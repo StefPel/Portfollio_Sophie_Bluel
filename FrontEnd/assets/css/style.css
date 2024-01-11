@@ -125,6 +125,41 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+/* Définition du style pour les éléments avec la classe .filters */
+.filters {
+    display: flex; /* Utilisation de Flexbox pour la mise en page */
+    justify-content: center; /* Centrage des éléments horizontalement */
+    gap: 10px; /* Ajout d'un espace de 10 pixels entre chaque élément */
+    align-items: center; /* Centrage des éléments verticalement */
+    margin: 50px 0; /* Ajout d'une marge de 50 pixels en haut et en bas, et 0 sur les côtés */
+}
+
+/* Définition du style pour les éléments avec la classe .button */
+.button {
+    display: flex; /* Utilisation de Flexbox */
+    align-items: center; /* Centrage des éléments à l'intérieur du bouton verticalement */
+    border: 1px #1d6154 solid; /* Bordure solide de 1 pixel de couleur #1d6154 */
+    border-radius: 60px; /* Arrondissement des coins du bouton avec un rayon de 60 pixels */
+    color: #1d6154; /* Couleur du texte du bouton */
+    background: #fff; /* Couleur de fond du bouton (blanc) */
+    height: 28px; /* Hauteur fixe du bouton */
+    font-family: "Syne", sans-serif; /* Police de caractères pour le texte du bouton */
+    font-weight: 700; /* Épaisseur de la police (700 = gras) */
+    font-size: 16px; /* Taille de la police */
+    text-align: center; /* Alignement du texte au centre */
+    padding: 3px 20px; /* Remplissage intérieur du bouton : 3 pixels en haut et en bas, 20 pixels sur les côtés */
+    cursor: pointer; /* Le curseur se transforme en pointeur lorsque l'utilisateur survole le bouton */
+}
+
+/* Définition du style pour les éléments .button lorsqu'ils sont survolés, 
+   ainsi que pour les éléments avec la classe .selected */
+.button:hover,
+.selected {
+    background: #1d6154; /* Couleur de fond change en #1d6154 lors du survol ou si le bouton est sélectionné */
+    color: #fff; /* Couleur du texte devient blanc */
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
