@@ -1,5 +1,5 @@
-// Attend que le document HTML soit complètement chargé avant d'exécuter le code JavaScript.
-document.addEventListener('DOMContentLoaded', () => {
+ // Ce code attend que le document HTML soit complètement chargé avant d'exécuter le code JavaScript.
+ document.addEventListener('DOMContentLoaded', () => {
 
     // Sélectionne l'élément HTML avec la classe 'gallery' et l'assigne à la variable 'gallery'.
     const gallery = document.querySelector('.gallery');
@@ -65,13 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const categories = [...new Set(projects.map(project => project.category.name))];
             categories.unshift('Tous'); // Ajoute 'Tous' aux catégories.
 
-            // Parcourt les catégories pour créer les boutons de filtre.
             categories.forEach(category => {
                 const button = document.createElement('button'); // Crée un bouton.
                 button.textContent = category; // Définit le texte du bouton.
                 button.classList.add('button'); // Ajoute une classe CSS.
 
-                // Ajoute un écouteur d'événements pour gérer le filtrage lors du clic sur le bouton.
                 button.addEventListener('click', () => {
                     console.log(`Filtrage par catégorie : ${category}`);
                     filterProjects(category); // Appelle 'filterProjects' quand le bouton est cliqué.
@@ -83,4 +81,55 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Erreur lors de la récupération des projets :', error);
         });
+
+    // Gestion de l'authentification.
+    let userData = {}; // Variable pour stocker les données de l'utilisateur.
+
+    function redirection() {
+        document.location.href = "index.html"; // Redirige vers 'index.html'.
+    }
+
+    async function login() {
+        const emailLogin = document.getElementById("email").value; // Récupère l'email.
+        const passwordLogin = document.getElementById("password").value; // Récupère le mot de passe.
+
+        const user = {
+            email: emailLogin,
+            password: passwordLogin,
+        };
+
+        try {
+            const response = await fetch("http://localhost:5678/api/users/login", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(user),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                userData = data.token; // Stocke le token.
+                console.log("Authentification réussie. Token d'utilisateur :", userData);
+                redirection(); // Appelle 'redirection'.
+            } else {
+                afficherErreur(); // Affiche une erreur si l'authentification échoue.
+            }
+        } catch (error) {
+            console.error("Erreur lors de l'authentification : " + error);
+        }
+    }
+
+    function afficherErreur() {
+        const error = "Identifiant ou de mot de passe incorrects";
+        document.querySelector(".error").innerHTML = error;
+        console.error("Échec de l'authentification.");
+    }
+
+    const btnForm = document.querySelector(".connexion");
+    btnForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        login(); // Appelle 'login' lorsque le formulaire est soumis.
+    });
 });
