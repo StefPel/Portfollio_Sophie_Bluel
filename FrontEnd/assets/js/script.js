@@ -1,97 +1,86 @@
-// Attente que le document HTML soit complètement chargé avant d'exécuter le code
+// Attend que le document HTML soit complètement chargé avant d'exécuter le code JavaScript.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Sélection de l'élément HTML avec la classe 'gallery'
+    // Sélectionne l'élément HTML avec la classe 'gallery' et l'assigne à la variable 'gallery'.
     const gallery = document.querySelector('.gallery');
     console.log('Élément de galerie sélectionné :', gallery);
 
-    // Sélection de l'élément HTML avec la classe 'filters'
+    // Sélectionne l'élément HTML avec la classe 'filters' et l'assigne à la variable 'filtersContainer'.
     const filtersContainer = document.querySelector('.filters');
     console.log('Conteneur des filtres sélectionné :', filtersContainer);
 
-    // Création d'un tableau vide pour stocker les données des projets
+    // Crée un tableau vide 'allProjects' pour stocker les données des projets plus tard.
     let allProjects = [];
 
-    // Définition d'une fonction pour afficher les projets dans la galerie
+    // Fonction pour afficher les projets dans la galerie.
     function displayProjects(projects) {
-        // Efface tout contenu existant dans la galerie
-        gallery.innerHTML = '';
+        gallery.innerHTML = ''; // Efface tout contenu existant dans la galerie.
 
-        // Parcours de chaque projet dans le tableau 'projects'
+        // Parcourt chaque projet dans le tableau 'projects'.
         projects.forEach(project => {
-            // Création d'un élément 'figure' pour chaque projet
-            const figure = document.createElement('figure');
+            const figure = document.createElement('figure'); // Crée un élément 'figure'.
 
-            // Création d'un élément 'img' pour l'image du projet
-            const img = document.createElement('img');
-            img.src = project.imageUrl; // Définition de l'URL de l'image
-            img.alt = project.title; // Définition du texte alternatif pour l'image
-            figure.appendChild(img); // Ajout de l'image à l'élément 'figure'
+            const img = document.createElement('img'); // Crée un élément 'img' pour l'image.
+            img.src = project.imageUrl; // Définit l'URL de l'image.
+            img.alt = project.title; // Définit le texte alternatif.
+            figure.appendChild(img); // Ajoute l'image à 'figure'.
 
-            // Création d'un élément 'figcaption' pour le titre du projet
-            const figcaption = document.createElement('figcaption');
-            figcaption.textContent = project.title; // Ajout du titre du projet
-            figure.appendChild(figcaption); // Ajout du titre à l'élément 'figure'
+            const figcaption = document.createElement('figcaption'); // Crée un élément 'figcaption'.
+            figcaption.textContent = project.title; // Ajoute le titre du projet.
+            figure.appendChild(figcaption); // Ajoute le titre à 'figure'.
 
-            // Ajout de l'élément 'figure' à la galerie
-            gallery.appendChild(figure);
+            gallery.appendChild(figure); // Ajoute 'figure' à la galerie.
         });
     }
 
-    // Définition d'une fonction pour filtrer les projets par catégorie
+    // Fonction pour filtrer les projets par catégorie.
     function filterProjects(category) {
-        // Déclaration d'une variable pour les projets filtrés
-        let filteredProjects;
+        let filteredProjects; // Variable pour les projets filtrés.
 
-        // Si la catégorie sélectionnée est 'Tous'
         if (category === 'Tous') {
-            filteredProjects = allProjects; // Utiliser tous les projets
+            filteredProjects = allProjects; // Si 'Tous', utilise tous les projets.
         } else {
-            // Sinon, filtrer les projets par la catégorie spécifiée
+            // Sinon, filtre les projets par catégorie.
             filteredProjects = allProjects.filter(project => project.category.name === category);
         }
 
-        // Afficher les projets filtrés
-        displayProjects(filteredProjects);
+        displayProjects(filteredProjects); // Appelle 'displayProjects' avec les projets filtrés.
     }
 
-    // Récupération des projets depuis une API
+    // Récupère les projets depuis une API.
     fetch('http://localhost:5678/api/works')
         .then(response => {
-            // Vérification si la réponse de l'API est valide
             if (!response.ok) {
                 throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
             }
-            return response.json(); // Transformation de la réponse en JSON
+            return response.json(); // Convertit la réponse en JSON.
         })
         .then(projects => {
-            allProjects = projects; // Stockage des projets dans 'allProjects'
+            allProjects = projects; // Stocke les projets dans 'allProjects'.
             console.log('Projets récupérés depuis l\'API :', allProjects);
 
-            displayProjects(allProjects); // Affichage initial de tous les projets
+            displayProjects(allProjects); // Affiche tous les projets.
 
-            // Création des boutons de filtre pour chaque catégorie unique
+            // Crée des boutons de filtre pour chaque catégorie unique.
             const categories = [...new Set(projects.map(project => project.category.name))];
-            categories.unshift('Tous'); // Ajout d'une option pour afficher tous les projets
+            categories.unshift('Tous'); // Ajoute 'Tous' aux catégories.
 
+            // Parcourt les catégories pour créer les boutons de filtre.
             categories.forEach(category => {
-                // Création d'un bouton pour chaque catégorie
-                const button = document.createElement('button');
-                button.textContent = category; // Définition du texte du bouton
-                button.classList.add('button'); // Ajout d'une classe CSS au bouton
+                const button = document.createElement('button'); // Crée un bouton.
+                button.textContent = category; // Définit le texte du bouton.
+                button.classList.add('button'); // Ajoute une classe CSS.
 
-                // Ajout d'un gestionnaire d'événements pour filtrer par catégorie
+                // Ajoute un écouteur d'événements pour gérer le filtrage lors du clic sur le bouton.
                 button.addEventListener('click', () => {
                     console.log(`Filtrage par catégorie : ${category}`);
-                    filterProjects(category);
+                    filterProjects(category); // Appelle 'filterProjects' quand le bouton est cliqué.
                 });
 
-                // Ajout du bouton au conteneur de filtres
-                filtersContainer.appendChild(button);
+                filtersContainer.appendChild(button); // Ajoute le bouton au conteneur.
             });
         })
         .catch(error => {
-            // Affichage d'une erreur en cas d'échec de la récupération des projets
             console.error('Erreur lors de la récupération des projets :', error);
         });
 });

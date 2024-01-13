@@ -98,6 +98,92 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+/* Style pour la classe .formulaire */
+.formulaire {
+    display: flex; /* Utilise Flexbox pour la mise en page */
+    justify-content: center; /* Centre les éléments horizontalement */
+    margin-bottom: 380px; /* Marge de 380 pixels en bas */
+    margin-top: 37px; /* Marge de 37 pixels en haut */
+}
+
+/* Style pour la classe .login */
+.login {
+    text-decoration: none; /* Supprime la décoration (soulignement) du texte */
+    color: #000; /* Couleur du texte en noir */
+}
+
+/* Style pour la classe .pagelogin */
+.pagelogin {
+    text-decoration: none; /* Supprime la décoration du texte */
+    color: #000; /* Couleur du texte en noir */
+    font-weight: 600; /* Épaisseur du texte (semi-gras) */
+}
+
+/* Style pour la classe .title_log_in */
+.title_log_in {
+    text-align: center; /* Alignement du texte au centre */
+    margin-top: 150px; /* Marge de 150 pixels en haut */
+}
+
+/* Style pour la classe .connexion */
+.connexion {
+    display: flex; /* Utilise Flexbox */
+    flex-direction: column; /* Les éléments sont disposés en colonne */
+    margin: 0 auto; /* Marge automatique à gauche et à droite pour centrer */
+}
+
+/* Style pour la classe .connexionlabel */
+.connexionlabel {
+    font-family: "Work Sans"; /* Police de caractères */
+    color: #3d3d3d; /* Couleur du texte */
+    font-weight: 500; /* Épaisseur du texte */
+}
+
+/* Style pour les éléments input dans la classe .connexion */
+.connexion input {
+    width: 380px; /* Largeur fixe */
+    height: 50px; /* Hauteur fixe */
+    margin-top: 7px; /* Marge de 7 pixels en haut */
+    margin-bottom: 30px; /* Marge de 30 pixels en bas */
+    border: none; /* Pas de bordure */
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09); /* Ombre portée */
+}
+
+/* Style pour le bouton submit dans la classe .connexion */
+.connexion .submit {
+    width: 180px; /* Largeur fixe */
+    height: 35px; /* Hauteur fixe */
+    background: #1d6154; /* Couleur de fond */
+    color: #fff; /* Couleur du texte (blanc) */
+    border-radius: 60px; /* Bordures arrondies */
+    border: none; /* Pas de bordure */
+    font-family: "Syne", sans-serif; /* Police de caractères */
+    font-weight: 700; /* Épaisseur du texte (gras) */
+    margin-top: 7px; /* Marge de 7 pixels en haut */
+    margin-bottom: 28px; /* Marge de 28 pixels en bas */
+    cursor: pointer; /* Curseur en forme de pointeur */
+    margin-left: auto; /* Marge automatique à gauche */
+    margin-right: auto; /* Marge automatique à droite */
+}
+
+/* Style pour la classe .error */
+.error {
+    margin: 5px 0; /* Marge de 5 pixels en haut et en bas */
+    color: red; /* Couleur du texte en rouge */
+    font-family: "Work Sans"; /* Police de caractères */
+    font-weight: 500; /* Épaisseur du texte */
+    font-style: italic; /* Texte en italique */
+}
+
+/* Style pour la classe .password_forgotten */
+.password_forgotten {
+    font-family: "Work Sans"; /* Police de caractères */
+    font-weight: 500; /* Épaisseur du texte */
+    color: #3d3d3d; /* Couleur du texte */
+    text-align: center; /* Alignement du texte au centre */
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
