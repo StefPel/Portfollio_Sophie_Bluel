@@ -236,7 +236,7 @@ function isLoggedIn() {
     }
   
     // Fonction pour ajouter une image individuelle à la galerie
-    function addImageToGallery(src) {
+    function addImageToGallery(src, projectId) {
         console.log('Ajout de l\'image à la galerie :', src);
         const imageContainer = document.createElement('div');
         imageContainer.classList.add('img_modal');
@@ -247,6 +247,10 @@ function isLoggedIn() {
         // Créer un bouton pour la suppression avec une icône SVG à la place du texte 'X'
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('icon1_modal');
+        deleteButton.setAttribute('data-id', projectId); // Ajouter l'ID du projet comme attribut data-id
+        deleteButton.addEventListener('click', function() {
+        deleteProject(projectId);
+    });
         // Ajouter l'élément img pour l'icône SVG dans le bouton
         const iconImage = document.createElement('img');
         iconImage.src = 'assets/icons/Group 9.svg'; // Chemin d'accès à l'icône SVG
@@ -258,3 +262,23 @@ function isLoggedIn() {
         // Ajouter le conteneur de l'image à la galerie
         galleryContainer.appendChild(imageContainer);
     }
+// Fonction pour supprimer un projet
+function deleteProject(projectId) {
+    fetch(`http://localhost:5678/api/works/${projectId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
+        }
+        console.log('Projet supprimé avec succès');
+        // Mettre à jour le DOM pour retirer l'élément supprimé
+        document.querySelector(`button[data-id="${projectId}"]`).parentNode.remove();
+    })
+    .catch(error => {
+        console.error('Erreur lors de la suppression du projet :', error);
+    });
+}
