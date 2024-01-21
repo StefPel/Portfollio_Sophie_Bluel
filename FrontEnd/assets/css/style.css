@@ -170,7 +170,7 @@ body {
   opacity: 1;
   transition: opacity 0.4s ease-out;
 }
-.modal1 {
+.modal, .modal_add {
   opacity: 0;
   width: 95%;
   max-width: 550px;
@@ -187,7 +187,11 @@ body {
   transform 0.4s ease-out;
 }
 
-.modal-container.active .modal1 {
+.modal_add {
+  display: none; 
+}
+
+.modal-container.active .modal, .modal-container.active .modal_add {
   opacity: 1;
   transform: translate(-50%, -50%);
   transition: opacity 0.4s 0.2s ease-out,
@@ -205,7 +209,7 @@ cursor: pointer;
   cursor: pointer;
 }
 
-.modal1 h1 {
+.modalTitle {
   margin: 30px 0 45px;
   font-family: "Work Sans";
   font-size: 26px;
@@ -238,43 +242,71 @@ cursor: pointer;
 
 .icon1_modal {
   position: absolute;
-  top: -3px; /* Ajustez en fonction de l'emplacement souhaité dans le conteneur */
-  right: -3px; /* Ajustez en fonction de l'emplacement souhaité dans le conteneur */
-  width: 30px; /* Taille du bouton */
-  height: 30px; /* Taille du bouton */
-  background: none; /* Aucun fond pour que l'icône soit seule visible */
-  border: none; /* Aucune bordure pour que l'icône soit seule visible */
-  padding: 0; /* Aucun padding pour que l'icône s'adapte bien */
+  top: -3px; 
+  right: -3px; 
+  width: 30px; 
+  height: 30px; 
+  background: none; 
+  border: none; 
+  padding: 0; 
   cursor: pointer;
 }
 
-/* Assurez-vous que l'icône SVG s'adapte à la taille du bouton */
+
 .icon1_modal img {
-  width: 50%; /* L'icône remplit le bouton */
-  height: auto; /* Maintient l'aspect ratio de l'icône */
+  width: 50%; 
+  height: auto; 
 }
 
-.add_photo {
+.form_upload_img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.form_upload_img label {
+  margin-left: 32px;
+}
+
+.form_upload_img #title_picture, #categories {
+  display: flex;
+  margin: auto;
+  font-family: "Work Sans";
+  color: #3d3d3d;
+  font-weight: 500;
+  width: 420px;
+  height: 50px;
+  margin-top: 7px;
+  margin-bottom: 30px;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09)
+}
+
+.form_add_photo {
   width: 420px;
   height: 170px;
   border-radius: 3px;
   background: #E8F1F7;
   margin: auto;
+  margin-bottom: 30px;
   padding: 30px 0 20px;
+  cursor: pointer;
 }
 
-.add_photo img {
+.form_add_photo img {
  display:block;
  margin:auto;
 }
 
-.add_photo p {
+.form_add_photo .format_picture {
+  display: flex;
+  justify-content: center;
   font-size: 10px;
-  text-align: center;
   margin-top: 7px;
 }
 
-.button_add_picture {
+.form_add_photo .button_add_picture {
   margin: auto;
   margin-top: 20px;
   display: flex;
@@ -289,37 +321,14 @@ cursor: pointer;
   font-family: "Syne", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  text-align: center;
   cursor: pointer;
 }
 
-.button_add_picture .input_file {
-  display: none;
-}
-
-.validate_picture {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.validate_picture label {
- margin-left: 32px;
-}
-
-.validate_picture #text, #categories {
-  display: flex;
-  margin: auto;
-  font-family: "Work Sans";
-  color: #3d3d3d;
-  font-weight: 500;
-  width: 420px;
-  height: 50px;
-  margin-top: 7px;
-  margin-bottom: 30px;
-  border: none;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09)
+.form_add_photo .img_uploaded {
+  display:block;
+  margin:auto;
+  height: 170px;
+  width: auto;
 }
 
 hr {
@@ -331,7 +340,7 @@ hr {
   margin-bottom: 30px;
 }
 
-.button_modal {
+.button_add_gallery {
   display: flex;
   align-items: center;
   margin: auto;
@@ -346,6 +355,22 @@ hr {
   text-align: center;
   padding: 10px 50px;
   cursor: pointer;
+}
+
+.button_validate {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  border: 1px #A7A7A7 solid;
+  background: #A7A7A7;
+  color: #fff;
+  border-radius: 60px;
+  height: 36px;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px 100px;
 }
 
 .link_modal {
@@ -404,89 +429,80 @@ nav li {
 li:hover {
   color: #b1663c;
 }
-/* Style pour la classe .formulaire */
+
 .formulaire {
-    display: flex; /* Utilise Flexbox pour la mise en page */
-    justify-content: center; /* Centre les éléments horizontalement */
-    margin-bottom: 380px; /* Marge de 380 pixels en bas */
-    margin-top: 37px; /* Marge de 37 pixels en haut */
+    display: flex; 
+    justify-content: center; 
+    margin-bottom: 380px; 
+    margin-top: 37px; 
 }
 
-/* Style pour la classe .login */
 .login {
-    text-decoration: none; /* Supprime la décoration (soulignement) du texte */
-    color: #000; /* Couleur du texte en noir */
+    text-decoration: none; 
+    color: #000; 
 }
 
-/* Style pour la classe .pagelogin */
 .pagelogin {
-    text-decoration: none; /* Supprime la décoration du texte */
-    color: #000; /* Couleur du texte en noir */
-    font-weight: 600; /* Épaisseur du texte (semi-gras) */
+    text-decoration: none; 
+    color: #000; 
+    font-weight: 600; 
 }
 
-/* Style pour la classe .title_log_in */
 .title_log_in {
-    text-align: center; /* Alignement du texte au centre */
-    margin-top: 150px; /* Marge de 150 pixels en haut */
+    text-align: center; 
+    margin-top: 150px; 
 }
 
-/* Style pour la classe .connexion */
 .connexion {
-    display: flex; /* Utilise Flexbox */
-    flex-direction: column; /* Les éléments sont disposés en colonne */
-    margin: 0 auto; /* Marge automatique à gauche et à droite pour centrer */
+    display: flex; 
+    flex-direction: column; 
+    margin: 0 auto;
 }
 
-/* Style pour la classe .connexionlabel */
 .connexionlabel {
-    font-family: "Work Sans"; /* Police de caractères */
-    color: #3d3d3d; /* Couleur du texte */
-    font-weight: 500; /* Épaisseur du texte */
+    font-family: "Work Sans"; 
+    color: #3d3d3d; 
+    font-weight: 500; 
 }
 
-/* Style pour les éléments input dans la classe .connexion */
 .connexion input {
-    width: 380px; /* Largeur fixe */
-    height: 50px; /* Hauteur fixe */
-    margin-top: 7px; /* Marge de 7 pixels en haut */
-    margin-bottom: 30px; /* Marge de 30 pixels en bas */
-    border: none; /* Pas de bordure */
-    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09); /* Ombre portée */
+    width: 380px; 
+    height: 50px; 
+    margin-top: 7px; 
+    margin-bottom: 30px; 
+    border: none; 
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09); 
 }
 
-/* Style pour le bouton submit dans la classe .connexion */
 .connexion .submit {
-    width: 180px; /* Largeur fixe */
-    height: 35px; /* Hauteur fixe */
-    background: #1d6154; /* Couleur de fond */
-    color: #fff; /* Couleur du texte (blanc) */
-    border-radius: 60px; /* Bordures arrondies */
-    border: none; /* Pas de bordure */
-    font-family: "Syne", sans-serif; /* Police de caractères */
-    font-weight: 700; /* Épaisseur du texte (gras) */
-    margin-top: 7px; /* Marge de 7 pixels en haut */
-    margin-bottom: 28px; /* Marge de 28 pixels en bas */
-    cursor: pointer; /* Curseur en forme de pointeur */
-    margin-left: auto; /* Marge automatique à gauche */
-    margin-right: auto; /* Marge automatique à droite */
+    width: 180px; 
+    height: 35px; 
+    background: #1d6154; 
+    color: #fff; 
+    border-radius: 60px; 
+    border: none; 
+    font-family: "Syne", sans-serif; 
+    font-weight: 700; 
+    margin-top: 7px; 
+    cursor: pointer; 
+    margin-left: auto; 
+    margin-right: auto; 
 }
 
-/* Style pour la classe .error */
 .error {
-    margin: 5px 0; /* Marge de 5 pixels en haut et en bas */
-    color: red; /* Couleur du texte en rouge */
-    font-family: "Work Sans"; /* Police de caractères */
-    font-weight: 500; /* Épaisseur du texte */
-    font-style: italic; /* Texte en italique */
+    margin: 5px 0; 
+    color: red; 
+    font-family: "Work Sans"; 
+    font-weight: 500; 
+    font-style: italic; 
 }
 
-/* Style pour la classe .password_forgotten */
+
 .password_forgotten {
-    font-family: "Work Sans"; /* Police de caractères */
-    font-weight: 500; /* Épaisseur du texte */
-    color: #3d3d3d; /* Couleur du texte */
-    text-align: center; /* Alignement du texte au centre */
+    font-family: "Work Sans"; 
+    font-weight: 500; 
+    color: #3d3d3d; 
+    text-align: center; 
 }
 
 .header_edit {
@@ -608,38 +624,34 @@ li:hover {
   cursor: pointer;
 }
 
-/* Définition du style pour les éléments avec la classe .filters */
 .filters {
-    display: flex; /* Utilisation de Flexbox pour la mise en page */
-    justify-content: center; /* Centrage des éléments horizontalement */
-    gap: 10px; /* Ajout d'un espace de 10 pixels entre chaque élément */
-    align-items: center; /* Centrage des éléments verticalement */
-    margin: 50px 0; /* Ajout d'une marge de 50 pixels en haut et en bas, et 0 sur les côtés */
+    display: flex;
+    justify-content: center; 
+    gap: 10px; 
+    align-items: center; 
+    margin: 50px 0; 
 }
 
-/* Définition du style pour les éléments avec la classe .button */
 .button {
-    display: flex; /* Utilisation de Flexbox */
-    align-items: center; /* Centrage des éléments à l'intérieur du bouton verticalement */
-    border: 1px #1d6154 solid; /* Bordure solide de 1 pixel de couleur #1d6154 */
-    border-radius: 60px; /* Arrondissement des coins du bouton avec un rayon de 60 pixels */
-    color: #1d6154; /* Couleur du texte du bouton */
-    background: #fff; /* Couleur de fond du bouton (blanc) */
-    height: 28px; /* Hauteur fixe du bouton */
-    font-family: "Syne", sans-serif; /* Police de caractères pour le texte du bouton */
-    font-weight: 700; /* Épaisseur de la police (700 = gras) */
-    font-size: 16px; /* Taille de la police */
-    text-align: center; /* Alignement du texte au centre */
-    padding: 3px 20px; /* Remplissage intérieur du bouton : 3 pixels en haut et en bas, 20 pixels sur les côtés */
-    cursor: pointer; /* Le curseur se transforme en pointeur lorsque l'utilisateur survole le bouton */
+    display: flex; 
+    align-items: center;
+    border: 1px #1d6154 solid; 
+    border-radius: 60px; 
+    color: #1d6154; 
+    background: #fff; 
+    height: 28px; 
+    font-family: "Syne", sans-serif; 
+    font-weight: 700; 
+    font-size: 16px; 
+    text-align: center; 
+    padding: 3px 20px; 
+    cursor: pointer;
 }
 
-/* Définition du style pour les éléments .button lorsqu'ils sont survolés, 
-   ainsi que pour les éléments avec la classe .selected */
 .button:hover,
 .selected {
-    background: #1d6154; /* Couleur de fond change en #1d6154 lors du survol ou si le bouton est sélectionné */
-    color: #fff; /* Couleur du texte devient blanc */
+    background: #1d6154; 
+    color: #fff; 
 }
 
 .gallery {
