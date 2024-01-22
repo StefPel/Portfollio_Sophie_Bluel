@@ -202,6 +202,7 @@ fetch('http://localhost:5678/api/works')
         console.error('Erreur lors de la récupération des projets :', error);
     });
 
+
 //-----------------Ajout de la fenêtre modale----------------//
   
 // Attendre que le DOM soit entièrement chargé avant d'exécuter le script
@@ -327,17 +328,28 @@ function deleteProject(projectId) {
         console.log('Projet supprimé avec succès');
         // Mettre à jour le DOM pour retirer l'élément supprimé
         document.querySelector(`button[data-id="${projectId}"]`).parentNode.remove();
+        // Fermer la modale après la suppression
+        closeModal();
     })
     .catch(error => {
         // Gestion des erreurs de réseau ou autres erreurs
         console.error('Erreur lors de la suppression du projet :', error);
     });
 }
-    // Chargez la galerie depuis l'API au chargement de la page
-    loadGalleryFromAPI();
+
+// Fonction pour fermer la modale
+function closeModal() {
+    const modal = document.querySelector('.modal-container'); // Remplacez par le sélecteur approprié pour votre modale
+    if (modal) {
+        modal.style.display = 'none'; // fermer la modale
+    }
+}
+
+// Chargez la galerie depuis l'API au chargement de la page
+loadGalleryFromAPI();
 });
 
-//------------------Téléchargement image pour le formulaire de modal_add----------------//
+//------------------ Téléchargement image pour le formulaire de modal_add ------------------//
 
 // Création d'un élément input de type 'file' pour sélectionner une image
 const fileInput = document.createElement('input');
@@ -413,40 +425,37 @@ function displayImg(url) {
     labelFile.innerHTML = ""; // Supprimer le contenu actuel du label
     labelFile.appendChild(img_element); // Ajouter l'élément 'img' au label
 }
+// ---------- Envoi d’un nouveau projet au back-end via le formulaire de la modale ---------- //
 
 // Fonction pour vérifier si le formulaire est valide
 function isFormValid() {
-    // Récupérer la valeur du champ 'title_picture'
+    // Récupération de la valeur du champ 'Titre'
     const title = inputTitle.value;
-
-    // Récupérer la valeur du champ 'categories'
+    // Récupération des catégories sélectionnées
     const selectedCategories = selectCategories.querySelectorAll('option:checked');
-    
-    // Vérifier si le champ 'title_picture' est rempli et s'il y a au moins une catégorie sélectionnée
+    // Vérification si le titre n'est pas vide et au moins une catégorie est sélectionnée
     const isValid = title.trim() !== '' && selectedCategories.length > 0;
-    
-    // Afficher un message d'erreur si le champ 'title_picture' est vide
+
+    // Affichage d'une erreur si le champ 'Titre' est vide
     if (title.trim() === '') {
         console.error("Le champ 'Titre' est vide.");
     }
 
-    // Afficher un message d'erreur si aucune catégorie n'est sélectionnée
+    // Affichage d'une erreur si aucune catégorie n'est sélectionnée
     if (selectedCategories.length === 0) {
         console.error("Aucune catégorie n'est sélectionnée.");
     }
 
     return isValid;
 }
-// Écouteurs d'événements pour les éléments pertinents
-inputTitle.addEventListener("input", updateSubmitButton);
-selectCategories.addEventListener("change", updateSubmitButton);
 
 // Fonction pour activer ou désactiver le bouton de validation en fonction de la validité du formulaire
 function updateSubmitButton() {
     const isValid = isFormValid();
+    // Désactivation du bouton de validation si le formulaire n'est pas valide
     validateButton.disabled = !isValid;
 
-    // Ajouter ou retirer la classe 'button' en fonction de la validité
+    // Ajout ou suppression de la classe 'button' pour le style du bouton en fonction de la validité
     if (isValid) {
         validateButton.classList.add('button');
     } else {
@@ -454,6 +463,93 @@ function updateSubmitButton() {
     }
 }
 
-// Appelez la fonction initiale pour vérifier l'état initial du bouton "Valider"
+// Écouteurs d'événements pour les éléments pertinents
+
+// Mettre à jour le bouton de validation lors de la saisie du titre ou du changement de catégorie
+inputTitle.addEventListener("input", updateSubmitButton);
+selectCategories.addEventListener("change", updateSubmitButton);
+
+// Fonction pour charger la galerie depuis l'API
+function loadGalleryFromAPI() {
+    // Effectuer une requête GET à l'URL de l'API pour obtenir les projets
+    fetch('http://localhost:5678/api/works')
+        .then(response => {
+            // Vérifier la réponse de la requête
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Données récupérées de l\'API', data);
+            // Vider le conteneur de la galerie avant d'ajouter de nouvelles images
+            galleryContainer.innerHTML = '';
+            // Ajouter chaque image à la galerie
+            data.forEach(item => addImageToGallery(item.imageUrl, item.id));
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement de la galerie :', error);
+        });
+}
+
+// Fonction pour fermer la modale
+function closeModal() {
+    // Sélection de la modale à l'aide du sélecteur approprié pour votre modale
+    const modal = document.querySelector('.modal-container');
+    if (modal) {
+        // Fermer la modale en masquant son affichage
+        modal.style.display = 'none';
+    }
+}
+
+// Fonction pour envoyer les données du formulaire au back-end
+function submitProjectForm() {
+    validateButton.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        if (!isFormValid()) {
+            alert('Veuillez remplir correctement le formulaire.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('title', inputTitle.value);
+        formData.append('category', selectCategories.value);
+        const file = input_file.files[0];
+        if (file) {
+            formData.append('image', file);
+        }
+
+        // Effectuer une requête POST à l'URL de l'API pour ajouter un nouveau projet
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            // Si votre API nécessite un token d'autorisation, assurez-vous de le fournir
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Projet ajouté avec succès', data);
+            closeModal(); // Fermer la modale après l'ajout réussi
+            loadGalleryFromAPI(); // Rafraîchir la galerie pour afficher le nouveau projet
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'ajout du projet :', error);
+            alert('Erreur lors de l\'ajout du projet : ' + error.message); // Afficher l'erreur côté client
+   });
+    });
+}
+
+// Initialisez le bouton de validation au démarrage
 updateSubmitButton();
+
+// Assurez-vous de lier cette fonction avec le bouton approprié
+submitProjectForm();
 
