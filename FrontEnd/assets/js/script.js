@@ -1,159 +1,83 @@
-//-------------Authentification-------------//
+//-------------Authentification et Gestion du Mode Édition-------------//
 
 // Fonction pour vérifier si l'utilisateur est connecté
 function isLoggedIn() {
-    // Vérifie si un jeton d'utilisateur est présent dans le stockage local
+    // Retourne vrai (true) si le jeton utilisateur est trouvé dans le stockage local, sinon faux (false)
     return localStorage.getItem('userToken') !== null;
 }
 
-
-//--------------Mode Connexion pour mode Edition----------------//
-
-  // Ce code attend que le document HTML soit complètement chargé avant d'exécuter le code JavaScript.
-  document.addEventListener('DOMContentLoaded', () => {
-    
-  // Gestion de l'affichage en fonction de l'état de connexion
-  if (isLoggedIn()) {
-    document.querySelectorAll('.header_edit, .modify_project').forEach(elem => {
-        elem.style.cssText = 'background-color: #000; height: 60px; display: flex; align-items: center; justify-content: center; gap: 20px;';
-    });
-  
-    document.querySelectorAll('.header_edit .button').forEach(button => {
-        button.style.cssText = 'border: none; background-color: #fff; border-radius: 60px; height: 38px; font-weight: 500; padding: 10px 20px; font-family: "Work Sans";';
-    });
-  
-    document.querySelectorAll('.edition').forEach(edition => {
-        edition.style.cssText = 'display: flex; color: #fff; align-items: center; gap: 10px;';
-    });
-  
-    document.querySelectorAll('.edition img').forEach(img => {
-        img.style.cssText = 'width: 15px; height: 15px;';
-    });
-  
-    document.querySelectorAll('.edition p').forEach(paragraph => {
-        paragraph.style.cssText = 'font-family: "Work Sans"; font-weight: 400; font-size: 16px;';
-    });
-  
-    document.querySelectorAll('.modify_project').forEach(modifyProject => {
-        modifyProject.style.cssText = 'display: flex; align-items: center; margin-bottom: 27px; gap: 10px;';
-    });
-  
-    document.querySelectorAll('.modify_project img').forEach(img => {
-        img.style.cssText = 'width: 17px; height: 17px;';
-    });
-  
-    document.querySelectorAll('.modify_project p').forEach(paragraph => {
-        paragraph.style.cssText = 'margin: 0; text-decoration: none; color: #000; cursor: pointer;';
-    });
-  } else {
-    document.querySelectorAll('.header_edit, .modify_project').forEach(elem => {
-        elem.style.display = 'none'; // Continue de cacher les éléments pour les utilisateurs non connectés
-    });
-  }
- 
-  //----------------Récupération des travaux depuis le back-end--------------------//
-
-    // Sélectionne l'élément HTML avec la classe 'gallery' et l'assigne à la variable 'gallery'.
-    const gallery = document.querySelector('.gallery');
-    console.log('Élément de galerie sélectionné :', gallery);
-  
-    // Sélectionne l'élément HTML avec la classe 'filters' et l'assigne à la variable 'filtersContainer'.
-    const filtersContainer = document.querySelector('.filters');
-    console.log('Conteneur des filtres sélectionné :', filtersContainer);
-  
-    // Crée un tableau vide 'allProjects' pour stocker les données des projets plus tard.
-    let allProjects = [];
-  
-    // Fonction pour afficher les projets dans la galerie.
-    function displayProjects(projects) {
-        gallery.innerHTML = ''; // Efface tout contenu existant dans la galerie.
-  
-        // Parcourt chaque projet dans le tableau 'projects'.
-        projects.forEach(project => {
-            const figure = document.createElement('figure'); // Crée un élément 'figure'.
-  
-            const img = document.createElement('img'); // Crée un élément 'img' pour l'image.
-            img.src = project.imageUrl; // Définit l'URL de l'image.
-            img.alt = project.title; // Définit le texte alternatif.
-            figure.appendChild(img); // Ajoute l'image à 'figure'.
-  
-            const figcaption = document.createElement('figcaption'); // Crée un élément 'figcaption'.
-            figcaption.textContent = project.title; // Ajoute le titre du projet.
-            figure.appendChild(figcaption); // Ajoute le titre à 'figure'.
-  
-            gallery.appendChild(figure); // Ajoute 'figure' à la galerie.
+// Fonction pour changer l'affichage des éléments et de leurs enfants
+function toggleDisplay(element, displayStyle) {
+    if (element) {
+        // Modifie le style d'affichage de l'élément
+        element.style.display = displayStyle;
+        // Parcourt et modifie le style d'affichage de chaque enfant de l'élément
+        Array.from(element.children).forEach(child => {
+            child.style.display = displayStyle;
         });
     }
+}
 
-//---------------Réalisation du filtre des travaux--------------------//
+// Fonction pour activer ou désactiver le mode édition
+function toggleEditMode() {
+    // Vérifie si le mode édition est activé
+    const editMode = localStorage.getItem('editMode') === 'true';
+    // Sélectionne les éléments concernés par le mode édition
+    const headerEdit = document.querySelector('.header_edit');
+    const modifyProject = document.querySelector('.modify_project');
 
-    // Fonction pour filtrer les projets par catégorie.
-    function filterProjects(category) {
-        let filteredProjects; // Variable pour les projets filtrés.
-  
-        if (category === 'Tous') {
-            filteredProjects = allProjects; // Si 'Tous', utilise tous les projets.
-        } else {
-            // Sinon, filtre les projets par catégorie.
-            filteredProjects = allProjects.filter(project => project.category.name === category);
-        }
-  
-        displayProjects(filteredProjects); // Appelle 'displayProjects' avec les projets filtrés.
+    // Applique le style d'affichage approprié en fonction du mode édition
+    if (editMode) {
+        console.log("Mode édition activé");
+        toggleDisplay(headerEdit, 'flex'); // Affiche .header_edit et ses enfants
+        toggleDisplay(modifyProject, 'flex'); // Affiche .modify_project et ses enfants
+    } else {
+        console.log("Mode édition désactivé");
+        toggleDisplay(headerEdit, 'none'); // Masque .header_edit et ses enfants
+        toggleDisplay(modifyProject, 'none'); // Masque .modify_project et ses enfants
     }
-  
-    // Récupère les projets depuis une API.
-    fetch('http://localhost:5678/api/works')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
-            }
-            return response.json(); // Convertit la réponse en JSON.
-        })
-        .then(projects => {
-            allProjects = projects; // Stocke les projets dans 'allProjects'.
-            console.log('Projets récupérés depuis l\'API :', allProjects);
-  
-            displayProjects(allProjects); // Affiche tous les projets.
-  
-            // Crée des boutons de filtre pour chaque catégorie unique.
-            const categories = [...new Set(projects.map(project => project.category.name))];
-            categories.unshift('Tous'); // Ajoute 'Tous' aux catégories.
-  
-            categories.forEach(category => {
-                const button = document.createElement('button'); // Crée un bouton.
-                button.textContent = category; // Définit le texte du bouton.
-                button.classList.add('button'); // Ajoute une classe CSS.
-  
-                button.addEventListener('click', () => {
-                    console.log(`Filtrage par catégorie : ${category}`);
-                    filterProjects(category); // Appelle 'filterProjects' quand le bouton est cliqué.
-                });
-  
-                filtersContainer.appendChild(button); // Ajoute le bouton au conteneur.
-            });
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des projets :', error);
-        });
+}
+
+// Écouteur d'événements qui s'exécute après le chargement complet de la page
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Chargement de la page terminé");
+
+    // Définit l'état du mode édition en fonction de l'état de connexion
+    if (isLoggedIn()) {
+        console.log("Utilisateur connecté");
+        localStorage.setItem('editMode', 'true');
+    } else {
+        console.log("Utilisateur non connecté");
+        localStorage.setItem('editMode', 'false');
+    }
+
+    // Applique le mode édition
+    toggleEditMode();
 
 //-------------Authentification de l’utilisateur------------//
 
-    // Gestion de l'authentification.
-    let userData = {}; // Variable pour stocker les données de l'utilisateur.
-  
+    // Gestion de l'authentification
+    let userData = {}; // Stocke les données de l'utilisateur
+
+    /**
+     * Redirige vers la page d'accueil après une connexion réussie.
+     */
     function redirection() {
-        document.location.href = "index.html"; // Redirige vers 'index.html'.
+        document.location.href = "index.html";
     }
-  
+
+    /**
+     * Traite le processus de connexion.
+     */
     async function login() {
-        const emailLogin = document.getElementById("email").value; // Récupère l'email.
-        const passwordLogin = document.getElementById("password").value; // Récupère le mot de passe.
-  
+        const emailLogin = document.getElementById("email").value;
+        const passwordLogin = document.getElementById("password").value;
+
         const user = {
             email: emailLogin,
             password: passwordLogin,
         };
-  
+
         try {
             const response = await fetch("http://localhost:5678/api/users/login", {
                 method: "POST",
@@ -163,35 +87,120 @@ function isLoggedIn() {
                 },
                 body: JSON.stringify(user),
             });
-  
+
             if (response.ok) {
                 const data = await response.json();
-                userData = data.token; // Stocke le token.
-                localStorage.setItem('userToken', data.token); // Stocke également le token dans le localStorage
+                userData = data.token;
+                localStorage.setItem('userToken', data.token);
                 console.log("Authentification réussie. Token d'utilisateur :", userData);
-                redirection(); // Appelle 'redirection'.
+                redirection();
             } else {
-                afficherErreur(); // Affiche une erreur si l'authentification échoue.
+                afficherErreur();
             }
         } catch (error) {
             console.error("Erreur lors de l'authentification : " + error);
         }
     }
-  
+
+    /**
+     * Affiche un message d'erreur en cas d'échec de l'authentification.
+     */
     function afficherErreur() {
-        const error = "Identifiant ou de mot de passe incorrects";
+        const error = "Identifiant ou mot de passe incorrects";
         document.querySelector(".error").innerHTML = error;
         console.error("Échec de l'authentification.");
     }
-  
+
+    // Gestionnaire d'événements pour le formulaire de connexion
     const btnForm = document.querySelector(".connexion");
-  if (btnForm) {
-      btnForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          login(); // Appelle 'login' lorsque le formulaire est soumis.
-      });
-  }
-  });
+    if (btnForm) {
+        btnForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            login();
+        });
+    }
+});
+
+//----------------Récupération des travaux depuis le back-end--------------------
+
+// Sélectionne l'élément de la galerie et le conteneur de filtres
+const gallery = document.querySelector('.gallery');
+console.log('Élément de la galerie sélectionné :', gallery);
+const filtersContainer = document.querySelector('.filters');
+console.log('Conteneur de filtres sélectionné :', filtersContainer);
+
+// Tableau pour stocker les données des projets
+let allProjects = [];
+
+/**
+ * Affiche les projets dans la galerie.
+ * @param {Array} projects - Tableau des projets à afficher.
+ */
+function displayProjects(projects) {
+    // Efface le contenu actuel de la galerie
+    gallery.innerHTML = '';
+
+    // Affiche chaque projet
+    projects.forEach(project => {
+        // Crée les éléments nécessaires pour chaque projet
+        const figure = document.createElement('figure');
+        const img = document.createElement('img');
+        img.src = project.imageUrl;
+        img.alt = project.title;
+        const figcaption = document.createElement('figcaption');
+        figcaption.textContent = project.title;
+
+        // Assemble et ajoute le projet à la galerie
+        figure.appendChild(img);
+        figure.appendChild(figcaption);
+        gallery.appendChild(figure);
+    });
+}
+
+/**
+ * Filtre et affiche les projets par catégorie.
+ * @param {String} category - Catégorie utilisée pour filtrer les projets.
+ */
+function filterProjects(category) {
+    // Détermine les projets à afficher en fonction de la catégorie
+    const filteredProjects = category === 'Tous' ? allProjects : allProjects.filter(project => project.category.name === category);
+
+    // Affiche les projets filtrés
+    displayProjects(filteredProjects);
+    console.log(`Projets filtrés par '${category}' affichés.`);
+}
+
+// Récupère les projets depuis l'API
+fetch('http://localhost:5678/api/works')
+    .then(response => {
+        // Vérifie si la réponse est correcte
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(projects => {
+        // Stocke et affiche les projets
+        allProjects = projects;
+        console.log('Projets récupérés depuis l\'API :', allProjects);
+        displayProjects(allProjects);
+
+        // Crée et ajoute des boutons de filtre
+        const categories = [...new Set(projects.map(project => project.category.name))];
+        categories.unshift('Tous');
+        categories.forEach(category => {
+            const button = document.createElement('button');
+            button.textContent = category;
+            button.classList.add('button');
+            button.addEventListener('click', () => filterProjects(category));
+            filtersContainer.appendChild(button);
+        });
+        console.log('Boutons de filtre créés.');
+    })
+    .catch(error => {
+        // Gère les erreurs de la requête
+        console.error('Erreur lors de la récupération des projets :', error);
+    });
 
 //-----------------Ajout de la fenêtre modale----------------//
   
@@ -322,8 +331,6 @@ function deleteProject(projectId) {
     .catch(error => {
         // Gestion des erreurs de réseau ou autres erreurs
         console.error('Erreur lors de la suppression du projet :', error);
-        // Affichez un message d'erreur à l'utilisateur
-        // Par exemple : alert('Une erreur s\'est produite lors de la suppression du projet.');
     });
 }
     // Chargez la galerie depuis l'API au chargement de la page
