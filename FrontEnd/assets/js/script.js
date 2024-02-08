@@ -255,7 +255,7 @@ fetch('http://localhost:5678/api/works')
 
     // Fonction pour charger la galerie depuis l'API
     function loadGalleryFromAPI() {
-        // Remplacer avec l'URL de votre API
+        // L'URL de l'API
         fetch('http://localhost:5678/api/works')
             .then(response => {
                 // Vérifier la réponse de la requête
@@ -375,7 +375,7 @@ img_element.style.height = '169px'; // Hauteur fixe de l'image
 
 // Fonction pour charger les catégories depuis l'API
 function loadCategoriesFromAPI() {
-    // Remplacer avec l'URL de votre API pour les catégories
+    // L'URL l'API pour les catégories
     fetch('http://localhost:5678/api/categories')
         .then(response => {
             if (!response.ok) {
@@ -387,7 +387,7 @@ function loadCategoriesFromAPI() {
             // Ajouter chaque catégorie comme une option au menu déroulant
             data.forEach(category => {
                 const option = document.createElement('option');
-                option.value = category.id; // Vous pouvez utiliser l'ID ou une autre propriété comme valeur
+                option.value = category.id; // Utiliser l'ID comme valeur
                 option.textContent = category.name; // Utilisez le nom de la catégorie comme texte
                 selectCategories.appendChild(option);
             });
@@ -436,16 +436,6 @@ function isFormValid() {
     // Vérification si le titre n'est pas vide et au moins une catégorie est sélectionnée
     const isValid = title.trim() !== '' && selectedCategories.length > 0;
 
-    // Affichage d'une erreur si le champ 'Titre' est vide
-    if (title.trim() === '') {
-        console.error("Le champ 'Titre' est vide.");
-    }
-
-    // Affichage d'une erreur si aucune catégorie n'est sélectionnée
-    if (selectedCategories.length === 0) {
-        console.error("Aucune catégorie n'est sélectionnée.");
-    }
-
     return isValid;
 }
 
@@ -482,7 +472,7 @@ function loadGalleryFromAPI() {
         })
         .then(data => {
             console.log('Données récupérées de l\'API', data);
-            // Vider le conteneur de la galerie avant d'ajouter de nouvelles images
+            // Vider le conteneur de la galerie avant d'ajouter les nouvelles images
             galleryContainer.innerHTML = '';
             // Ajouter chaque image à la galerie
             data.forEach(item => addImageToGallery(item.imageUrl, item.id));
@@ -524,7 +514,7 @@ function submitProjectForm() {
         fetch('http://localhost:5678/api/works', {
             method: 'POST',
             body: formData,
-            // Si votre API nécessite un token d'autorisation, assurez-vous de le fournir
+            // Token d'autorisation
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('userToken')}`
             },
@@ -550,6 +540,6 @@ function submitProjectForm() {
 // Initialisez le bouton de validation au démarrage
 updateSubmitButton();
 
-// Assurez-vous de lier cette fonction avec le bouton approprié
+// Lier cette fonction avec le bouton approprié
 submitProjectForm();
 
