@@ -189,47 +189,47 @@ function deleteProject(projectId) {
     .catch(handleError); // Gère les erreurs
 }
 
-// Fonction pour gérer la soumission du formulaire
 function submitForm(event) {
     event.preventDefault(); // Empêche l'envoi classique du formulaire
     if (!isFormValid()) {
         alert('Veuillez remplir correctement le formulaire.');
         return;
     }
-    const formData = new FormData(); // Crée un nouvel objet FormData
-    formData.append('title', inputTitle.value); // Ajoute le titre au formData
-    formData.append('category', selectCategories.value); // Ajoute la catégorie au formData
-    fileInput.files[0] && formData.append('image', fileInput.files[0]); // Ajoute l'image au formData si elle existe
+    const formData = new FormData();
+    formData.append('title', inputTitle.value);
+    formData.append('category', selectCategories.value);
+    if (fileInput.files[0]) formData.append('image', fileInput.files[0]);
 
-    // Envoie le formData à l'API
     fetch('http://localhost:5678/api/works', {
-        method: 'POST', // Méthode d'envoi
-        body: formData, // Corps de la requête
-        headers: {'Authorization': `Bearer ${localStorage.getItem('userToken')}`} // Ajoute le token d'authentification
+        method: 'POST',
+        body: formData,
+        headers: {'Authorization': `Bearer ${localStorage.getItem('userToken')}`}
     })
-    .then(response => response.ok ? response.json() : Promise.reject(`Erreur HTTP ! Statut : ${response.status}`)) // Gère la réponse
+    .then(response => response.ok ? response.json() : Promise.reject(`Erreur HTTP ! Statut : ${response.status}`))
     .then(data => {
-        modalAdd.style.display = 'none'; // Cache la modal d'ajout
-        form.reset(); // Réinitialise le formulaire pour un futur usage
-
-        // Optionnellement, vérifiez si vous devez rafraîchir des éléments ou des listes dans la première modal
-        modalContainer.classList.add('active'); // S'assure que la première modal est visible
-        loadGalleryFromAPI(); // Recharge la galerie depuis l'API pour afficher les dernières modifications
+       
+        modalAdd.style.display = 'none';
+        form.reset();
+        modalContainer.classList.add('active');
+        loadGalleryFromAPI();
     })
     .catch(error => {
-        console.error('Erreur lors de l\'ajout du projet :', error); // Affiche un message d'erreur
-       // Créer un élément p
-    let p = document.createElement("p");
-    p.textContent = "Veuillez remplir le formulaire correctement";
-
-    // Enlever la propriété CSS qui cache la div
-    let div = document.getElementById("maDiv");
-    div.style.display = "block";
-
-    // Ajouter l'élément p à la div
-    div.appendChild(p);
+        console.error('Erreur lors de l\'ajout du projet :', error);
+        // Vérifier si le message d'erreur existe déjà
+        let errorMessageId = "error-message";
+        let existingErrorMessage = document.getElementById(errorMessageId);
+        if (!existingErrorMessage) {
+            // Créer et ajouter le message d'erreur s'il n'existe pas déjà
+            let p = document.createElement("p");
+            p.id = errorMessageId; // Attribuer un identifiant unique
+            p.textContent = "Veuillez remplir le formulaire correctement";
+            let div = document.getElementById("maDiv");
+            div.style.display = "block"; // S'assure que la div est visible
+            div.appendChild(p);
+        }
     });
 }
+
 
 // Fonction pour mettre à jour le bouton de soumission
 function updateSubmitButton() {
@@ -238,12 +238,14 @@ function updateSubmitButton() {
     validateButton.disabled = !isValid;
 
     // Ajout ou suppression de la classe 'button' pour le style du bouton en fonction de la validité
-    if (isValid) {
+     // Ajout ou suppression de la classe 'button' pour le style du bouton en fonction de la validité
+     if (isValid) {
         validateButton.classList.add('button');
     } else {
         validateButton.classList.remove('button');
     }
 }
+
 
 // Fonction pour vérifier si le formulaire est valide
 function isFormValid() {
