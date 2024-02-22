@@ -191,6 +191,10 @@ body {
   display: none; 
 }
 
+#maDiv {
+  display: none;
+}
+
 .modal-container.active .modal, .modal-container.active .modal_add {
   opacity: 1;
   transform: translate(-50%, -50%);
@@ -425,9 +429,20 @@ nav li {
   padding: 0 10px;
   font-size: 1.2em;
 }
+nav ul li a:hover {
+  text-decoration: none;
+  color: #000000;
+  font-weight: 600;
+}
 
 li:hover {
-  color: #b1663c;
+  text-decoration: none;
+  color: #000000;
+  font-weight: 600;
+}
+
+a {
+  text-decoration: none;
 }
 
 .formulaire {
@@ -540,11 +555,6 @@ li:hover {
   font-family: "Work Sans";
   font-weight: 400;
   font-size: 16px;
-}
-
-.logout {
-  text-decoration: none;
-  color: #000;
 }
 
 #introduction {
