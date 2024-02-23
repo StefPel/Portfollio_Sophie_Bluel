@@ -230,7 +230,6 @@ function submitForm(event) {
     });
 }
 
-
 // Fonction pour mettre à jour le bouton de soumission
 function updateSubmitButton() {
     const isValid = isFormValid();
@@ -245,7 +244,6 @@ function updateSubmitButton() {
         validateButton.classList.remove('button');
     }
 }
-
 
 // Fonction pour vérifier si le formulaire est valide
 function isFormValid() {

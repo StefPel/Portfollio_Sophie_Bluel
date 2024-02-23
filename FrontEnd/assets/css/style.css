@@ -193,6 +193,11 @@ body {
 
 #maDiv {
   display: none;
+  margin: 5px 0; 
+  color: red; 
+  font-family: "Work Sans"; 
+  font-weight: 500; 
+  font-style: italic; 
 }
 
 .modal-container.active .modal, .modal-container.active .modal_add {
